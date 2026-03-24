@@ -24,11 +24,10 @@ int main(){
 
         }
 
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color(240, 240, 240));
 
         grid.draw(window);
 
         window.display();
     }
 }
-
