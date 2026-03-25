@@ -1,4 +1,5 @@
 #include "../include/grid.h"
+#include <random>
 
 constexpr unsigned WINDOW_HEIGHT = 800;
 constexpr unsigned WINDOW_WIDTH = 800;
@@ -8,7 +9,7 @@ int main(){
     window.create(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Window");
     window.setFramerateLimit(60);
 
-    Grid grid(20, 20); // 20x20 grid
+    Grid grid(75, 75); 
     grid.fill(window.getSize());
 
     while (window.isOpen()){
@@ -27,7 +28,9 @@ int main(){
         window.clear(sf::Color(240, 240, 240));
 
         grid.draw(window);
-
+        if (!grid.generationDone()){
+            grid.generateMaze();
+        }
         window.display();
     }
 }
