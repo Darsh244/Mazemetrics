@@ -1,4 +1,5 @@
 #include "../include/grid.h"
+#include <algorithm>
 #include <random>
 #include <vector>
 #include <iostream>
@@ -103,9 +104,9 @@ void Grid::generateMaze(){
     processNeighbours(starting_cell, frontierList, neighbourPassages);
 
     while(!frontierList.empty()){
-        std::pair<Grid::Cell, int> randomCellDetails = getRandomCellDetails(frontierList);
+        std::pair<Grid::Cell, int> randomCellDetails = getRandomCellDetails(frontierList, 1);
         processNeighbours(randomCellDetails.first, frontierList, neighbourPassages);
-        Cell randomPassage = getRandomCellDetails(neighbourPassages).first;
+        Cell randomPassage = getRandomCellDetails(neighbourPassages, 0).first;
         carve(randomCellDetails.first, randomPassage); // marking the wall between frontier and neighbour as Passage
         setCellType(randomCellDetails.first, Type::UNVISITED); // marking current frontier as Passage
         popFrontierCell(randomCellDetails.second, frontierList);     
@@ -136,7 +137,9 @@ void Grid::processNeighbours(Cell cell, std::vector<Cell>& frontierList, std::ve
     int dc[] = {0, 2, 0, -2}; // col offsets
     passages.clear();
 
-    for (int i = 0; i < 4; ++i){
+    std::vector<int> indices = {0, 1, 2, 3};
+    std::shuffle(indices.begin(), indices.end(), generator);
+    for (int i : indices){
         Cell neighbour = {cell.row + dr[i], cell.col + dc[i]};
         if (!outOfBounds(neighbour)){
             if (getCellType(neighbour) == Type::OBSTACLE){
@@ -174,9 +177,13 @@ Grid::Cell Grid::getRandomCell(){
     return {rowDist(generator), colDist(generator)};
 }
 
-std::pair<Grid::Cell, int> Grid::getRandomCellDetails(std::vector<Cell>& cells){
+std::pair<Grid::Cell, int> Grid::getRandomCellDetails(std::vector<Cell>& cells, bool applyBias){
     std::uniform_int_distribution<int> dist(0, cells.size() - 1);
     int index = dist(generator);
+    if (applyBias){
+        std::bernoulli_distribution pickBack(0.85); // biasing towards back for longer corridors
+        if (pickBack(generator)) index = cells.size() - 1; 
+    }
     return {cells[index], index};
 }
 

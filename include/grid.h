@@ -35,7 +35,7 @@ class Grid {
         bool mazeGenerated;
 
         Cell getRandomCell();
-        std::pair<Cell, int> getRandomCellDetails(std::vector<Cell>& cells);
+        std::pair<Cell, int> getRandomCellDetails(std::vector<Cell>& cells, bool applyBias);
         sf::Vertex* getBlockVertices(Cell cell);
         Block& getBlock(Cell cell);
         const Type getCellType(Cell cell);

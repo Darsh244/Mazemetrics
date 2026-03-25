@@ -9,7 +9,7 @@ int main(){
     window.create(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Window");
     window.setFramerateLimit(60);
 
-    Grid grid(75, 75); 
+    Grid grid(80, 80); 
     grid.fill(window.getSize());
 
     while (window.isOpen()){
