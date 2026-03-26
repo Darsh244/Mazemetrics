@@ -17,8 +17,8 @@ namespace COLOR {
 class Grid {
     int rows;
     int columns;
-    std::vector<std::vector<Block>> blocks;
     sf::VertexArray vertices;
+    std::vector<std::vector<Block>> blocks;
     public:
         Grid(int r, int c);
         void fill(const sf::Vector2u windowSize);
@@ -31,23 +31,29 @@ class Grid {
             int row;
             int col;
         };
+        struct Wall {
+            Cell Cell1;
+            Cell Cell2;
+        };
+
         std::mt19937 generator;
         bool mazeGenerated;
 
         Cell getRandomCell();
-        std::pair<Cell, int> getRandomCellDetails(std::vector<Cell>& cells, bool applyBias);
         sf::Vertex* getBlockVertices(Cell cell);
         Block& getBlock(Cell cell);
         const Type getCellType(Cell cell);
+        Cell getUnvisited(Wall& wall);
+        std::pair<Wall, int> getRandomWallDetails(std::vector<Wall>& wallList);
 
-        void processNeighbours(Cell cell, std::vector<Cell>& frontierList, std::vector<Cell>& passages);
-        void carve(Cell& frontierCell, Cell& passageCell);
-        void popFrontierCell(int index, std::vector<Cell>& frontierList);
+        void addWalls(Cell cell,  std::vector<Wall>& wallList);
+        void popWall(int index, std::vector<Wall>& wallList);
 
         void setCellType(Cell cell, const Type type);
         void setBlockPosition(Cell cell, float blockSize);
         void setBlockColor(Cell cell, const Type type);
 
         bool outOfBounds(Cell cell);
+        bool onlyOneVisited(Wall& wall);
 
 };

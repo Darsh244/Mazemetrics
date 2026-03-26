@@ -9,8 +9,10 @@ int main(){
     window.create(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Window");
     window.setFramerateLimit(60);
 
-    Grid grid(80, 80); 
+    Grid grid(50, 50); 
     grid.fill(window.getSize());
+    grid.generateMaze();
+
 
     while (window.isOpen()){
         while (const auto event = window.pollEvent()){
@@ -28,9 +30,6 @@ int main(){
         window.clear(sf::Color(240, 240, 240));
 
         grid.draw(window);
-        if (!grid.generationDone()){
-            grid.generateMaze();
-        }
         window.display();
     }
 }

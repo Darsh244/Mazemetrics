@@ -2,12 +2,9 @@
 #include <iostream>
 
 enum Type {
-    OBSTACLE,
-    PATH,
-    START,
-    END,
     VISITED,
-    UNVISITED
+    UNVISITED,
+    WALL
 };
 
 class Block {

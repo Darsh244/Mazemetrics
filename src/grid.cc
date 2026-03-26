@@ -5,8 +5,8 @@
 #include <iostream>
 
 Grid::Grid(int r, int c){
-    rows = r;
-    columns = c;
+    rows = 2 * r + 1;
+    columns = 2 * c + 1;
     vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
     vertices.resize(rows * columns * 6);
 
@@ -32,7 +32,11 @@ void Grid::fill(const sf::Vector2u windowSize){
     for (int row = 0; row < rows; ++ row){
         std::vector<Block> currentRow;
         for (int col = 0; col < columns; ++ col){
-            Block block(Type::OBSTACLE);
+
+            Block block(Type::WALL); // even indices are walls
+            if (row % 2 == 1 && col % 2 == 1){ // odd indices are paths
+                block.setType(Type::UNVISITED);
+            }
             currentRow.push_back(block);
 
             setBlockPosition({row, col}, blockSize);
@@ -66,24 +70,15 @@ void Grid::setBlockPosition(Cell cell, float blockSize){
 void Grid::setBlockColor(Cell cell, const Type type){
     sf::Color color;
     switch (type) {
-        case OBSTACLE:
-            color = COLOR::BLACK;
-            break;
-        case PATH:
-            color = COLOR::YELLOW;
-            break;
-        case START:
-            color = COLOR::GREEN;
-            break;
-        case END:
-            color = COLOR::RED;  
-            break;      
         case VISITED:
-            color = COLOR::LBLUE;
+            color = COLOR::LGREY;
             break;
         case UNVISITED:
-            color = COLOR::LGREY;
-            break;     
+            color = COLOR::BLACK;
+            break;  
+        case WALL:
+            color = COLOR::BLACK;
+            break;   
     }
 
     sf::Vertex* block = getBlockVertices(cell);
@@ -93,75 +88,10 @@ void Grid::setBlockColor(Cell cell, const Type type){
 }
 
 
-void Grid::generateMaze(){
-    Cell starting_cell = getRandomCell();
-    setCellType(starting_cell, Type::UNVISITED); // UNVISITED are Passages
-
-    std::vector<Cell> frontierList;
-    std::vector<Cell> neighbourPassages;
-    frontierList.reserve(rows * columns);
-    neighbourPassages.reserve(4);
-    processNeighbours(starting_cell, frontierList, neighbourPassages);
-
-    while(!frontierList.empty()){
-        std::pair<Grid::Cell, int> randomCellDetails = getRandomCellDetails(frontierList, 1);
-        processNeighbours(randomCellDetails.first, frontierList, neighbourPassages);
-        Cell randomPassage = getRandomCellDetails(neighbourPassages, 0).first;
-        carve(randomCellDetails.first, randomPassage); // marking the wall between frontier and neighbour as Passage
-        setCellType(randomCellDetails.first, Type::UNVISITED); // marking current frontier as Passage
-        popFrontierCell(randomCellDetails.second, frontierList);     
-    }
-
-    mazeGenerated = true;
-    
-}
-
-void Grid::popFrontierCell(int index, std::vector<Cell>& frontierList){
-    std::swap(frontierList[index], frontierList.back());
-    frontierList.pop_back();
-}
-
-
-void Grid::carve(Cell& frontierCell, Cell& passageCell){
-    // calculating direction of wall in between passageCell and frontierCell
-    int direction[] = {(passageCell.row - frontierCell.row) / 2, (passageCell.col - frontierCell.col) / 2};
-    setCellType(
-        {frontierCell.row + direction[0], frontierCell.col + direction[1]},
-        Type::UNVISITED
-    );
-}
-
-
-void Grid::processNeighbours(Cell cell, std::vector<Cell>& frontierList, std::vector<Cell>& passages){
-    int dr[] = {-2, 0, 2, 0}; // row offsets
-    int dc[] = {0, 2, 0, -2}; // col offsets
-    passages.clear();
-
-    std::vector<int> indices = {0, 1, 2, 3};
-    std::shuffle(indices.begin(), indices.end(), generator);
-    for (int i : indices){
-        Cell neighbour = {cell.row + dr[i], cell.col + dc[i]};
-        if (!outOfBounds(neighbour)){
-            if (getCellType(neighbour) == Type::OBSTACLE){
-                frontierList.push_back(neighbour);
-            }
-            else if (getCellType(neighbour) == Type::UNVISITED){
-                passages.push_back(neighbour);
-            }
-        }
-    }
-}
-
-
 bool Grid::outOfBounds(Cell cell){
     return cell.row < 0 || cell.row >= rows || cell.col < 0 || cell.col >= columns;
 }
 
-
-void Grid::setCellType(Cell cell, const Type type){
-    getBlock(cell).setType(type);
-    setBlockColor(cell, type);
-}
 
 Block& Grid::getBlock(Cell cell){
     return blocks[cell.row][cell.col];
@@ -171,19 +101,84 @@ const Type Grid::getCellType(Cell cell){
     return getBlock(cell).getType();
 }
 
-Grid::Cell Grid::getRandomCell(){
-    std::uniform_int_distribution<int> rowDist(0, rows - 1); // maps input to random number in range (inclusive)
-    std::uniform_int_distribution<int> colDist(0, columns - 1);
-    return {rowDist(generator), colDist(generator)};
+
+void Grid::generateMaze(){
+    std::vector<Wall> wallList;
+    wallList.reserve(rows * columns / 2);
+
+    Cell starting_cell = getRandomCell();
+    setCellType(starting_cell, Type::VISITED); 
+    addWalls(starting_cell, wallList);
+    while(!wallList.empty()){
+        std::pair<Wall, int> randomWallDetails = getRandomWallDetails(wallList);
+        Wall randomWall = randomWallDetails.first;
+        popWall(randomWallDetails.second, wallList);
+        if (onlyOneVisited(randomWall)){
+            Cell unvisited = getUnvisited(randomWall);
+            Cell between = {
+                (randomWall.Cell1.row + randomWall.Cell2.row) / 2,
+                (randomWall.Cell1.col + randomWall.Cell2.col) / 2,
+            };
+            setCellType(unvisited, Type::VISITED);
+            setCellType(between, Type::VISITED);
+            addWalls(unvisited, wallList);
+        }
+    }
+
+    mazeGenerated = true;
+    
 }
 
-std::pair<Grid::Cell, int> Grid::getRandomCellDetails(std::vector<Cell>& cells, bool applyBias){
-    std::uniform_int_distribution<int> dist(0, cells.size() - 1);
-    int index = dist(generator);
-    if (applyBias){
-        std::bernoulli_distribution pickBack(0.85); // biasing towards back for longer corridors
-        if (pickBack(generator)) index = cells.size() - 1; 
-    }
-    return {cells[index], index};
+
+Grid::Cell Grid::getUnvisited(Wall& wall){
+    if (getCellType(wall.Cell1) == Type::UNVISITED) return wall.Cell1;
+    else return wall.Cell2;
 }
+
+bool Grid::onlyOneVisited(Wall& wall){
+    Type type1 = getCellType(wall.Cell1);
+    Type type2 = getCellType(wall.Cell2);
+    return ((type1 == Type::VISITED && type2 == Type::UNVISITED) ||
+            (type1 == Type::UNVISITED && type2 == Type::VISITED)); 
+}
+
+
+void Grid::popWall(int index, std::vector<Wall>& wallList){
+    std::swap(wallList[index], wallList.back());
+    wallList.pop_back();
+}
+
+
+
+std::pair<Grid::Wall, int> Grid::getRandomWallDetails(std::vector<Wall>& wallList){
+    std::uniform_int_distribution<int> dist(0, wallList.size() - 1);
+    int index = dist(generator);
+    return {wallList[index], index};
+}
+
+void Grid::addWalls(Cell cell, std::vector<Wall>& wallList){
+    int dr[] = {-2, 0, 2, 0}; // row offsets
+    int dc[] = {0, 2, 0, -2}; // col offsets
+    std::vector<int> indices = {0, 1, 2, 3};
+    std::shuffle(indices.begin(), indices.end(), generator);
+    for (int i : indices){
+        Cell neighbour = {cell.row + dr[i], cell.col + dc[i]};
+        if (!outOfBounds(neighbour) && getCellType(neighbour) == Type::UNVISITED){
+            wallList.push_back({cell, neighbour});
+        }
+    }
+}
+
+
+void Grid::setCellType(Cell cell, const Type type){
+    getBlock(cell).setType(type);
+    setBlockColor(cell, type);
+}
+
+Grid::Cell Grid::getRandomCell(){
+    std::uniform_int_distribution<int> rowDist(0, (rows - 2) / 2);
+    std::uniform_int_distribution<int> colDist(0, (columns - 2) / 2);
+    return {rowDist(generator) * 2 + 1, colDist(generator) * 2 + 1};
+}
+
 
