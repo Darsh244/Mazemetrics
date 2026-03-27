@@ -1,6 +1,10 @@
-#include "block.h"
+#pragma once
+#include "Block.h"
 #include <random>
 #include <vector>
+
+struct Position;
+enum class Type : int;
 
 namespace COLOR {
     const sf::Color RED(255, 0, 0);
@@ -23,37 +27,17 @@ class Grid {
         Grid(int r, int c);
         void fill(const sf::Vector2u windowSize);
         void draw(sf::RenderWindow& win);
-        void generateMaze();
-        bool generationDone() {return mazeGenerated;}
+        int getRows() const {return rows;}
+        int getColumns() const {return columns;}
     
-    private:
-        struct Cell {
-            int row;
-            int col;
-        };
-        struct Wall {
-            Cell Cell1;
-            Cell Cell2;
-        };
+    private:  
+        void setBlockPosition(Position pos, float blockSize);
+        void setBlockColor(Position pos, const Type type);
 
-        std::mt19937 generator;
-        bool mazeGenerated;
+        Block& getBlockAtPos(Position pos);
+        sf::Vertex* getVerticesOfBlockAtPos(Position blockPos);
 
-        Cell getRandomCell();
-        sf::Vertex* getBlockVertices(Cell cell);
-        Block& getBlock(Cell cell);
-        const Type getCellType(Cell cell);
-        Cell getUnvisited(Wall& wall);
-        std::pair<Wall, int> getRandomWallDetails(std::vector<Wall>& wallList);
 
-        void addWalls(Cell cell,  std::vector<Wall>& wallList);
-        void popWall(int index, std::vector<Wall>& wallList);
-
-        void setCellType(Cell cell, const Type type);
-        void setBlockPosition(Cell cell, float blockSize);
-        void setBlockColor(Cell cell, const Type type);
-
-        bool outOfBounds(Cell cell);
-        bool onlyOneVisited(Wall& wall);
+        friend class MazeGenerator;
 
 };

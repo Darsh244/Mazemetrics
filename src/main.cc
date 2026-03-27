@@ -1,4 +1,6 @@
-#include "../include/grid.h"
+#include "../include/Grid.h"
+#include "../include/PrimGenerator.h"
+#include "MazeGenerator.h"
 #include <random>
 
 constexpr unsigned WINDOW_HEIGHT = 800;
@@ -11,9 +13,9 @@ int main(){
 
     Grid grid(50, 50); 
     grid.fill(window.getSize());
-    grid.generateMaze();
-
-
+    MazeGenerator* mazeGenerator = new PrimGenerator(grid);
+    mazeGenerator->generateMaze();
+    
     while (window.isOpen()){
         while (const auto event = window.pollEvent()){
             if (event->is<sf::Event::Closed>()){

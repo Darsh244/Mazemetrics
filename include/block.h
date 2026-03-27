@@ -1,10 +1,12 @@
+#pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-enum Type {
+enum class Type : int{
     VISITED,
     UNVISITED,
-    WALL
+    WALL,
+    PASSAGE
 };
 
 class Block {
