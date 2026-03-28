@@ -27,6 +27,7 @@ class Grid {
         Grid(int r, int c);
         void fill(const sf::Vector2u windowSize);
         void draw(sf::RenderWindow& win);
+        void reset(const sf::Vector2u windowSize);
         int getRows() const {return rows;}
         int getColumns() const {return columns;}
     

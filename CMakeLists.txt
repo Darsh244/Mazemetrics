@@ -12,6 +12,7 @@ add_executable(maze
     src/Grid.cc
     src/MazeGenerator.cc
     src/PrimGenerator.cc
+    src/Position.cc
 )
 
 target_include_directories(maze PRIVATE include)

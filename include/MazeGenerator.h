@@ -15,6 +15,7 @@ class MazeGenerator{
         std::mt19937 generator;
         bool mazeGenerated;
 
+
         bool outOfBounds(Position blockPos);
 
         sf::Vertex* getBlockVertices(Position blockPos);
@@ -32,6 +33,7 @@ class MazeGenerator{
     public:
         MazeGenerator(Grid& g, unsigned int seed = std::random_device{}());
         virtual void  generateMaze() = 0;
+        virtual void generateMazeStep(int batchSize = 1) {}
         bool generationDone() {return mazeGenerated;}
         virtual ~MazeGenerator() {}
 

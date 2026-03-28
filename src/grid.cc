@@ -40,6 +40,11 @@ void Grid::fill(const sf::Vector2u windowSize){
     }
 }
 
+void Grid::reset(const sf::Vector2u windowSize){
+    blocks.clear();
+    fill(windowSize);
+}
+
 
 sf::Vertex* Grid::getVerticesOfBlockAtPos(Position blockPos){
     int r = blockPos.row;
@@ -74,6 +79,9 @@ void Grid::setBlockColor(Position blockPos, const Type type){
             break;
         case Type::PASSAGE:
             color = COLOR::LGREY;
+            break;
+        case Type::ACTIVE:
+            color = COLOR::RED;
             break;
     }
 

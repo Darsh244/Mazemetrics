@@ -1,38 +1,57 @@
 #include "../include/PrimGenerator.h"
 #include  "../include/Block.h"
+#include "MazeGenerator.h"
+#include "Position.h"
+#include <random>
 
 
 PrimGenerator::PrimGenerator(Grid& g, unsigned int seed) : MazeGenerator(g, seed) {
     int rows = getGridRows();
     int columns = getGridColumns();
     wallList.reserve(rows * columns / 2);
+    hasActive = false;
 }
 
 
 void PrimGenerator::generateMaze(){
     Position starting_position = getRandomPosition();
     setBlockType(starting_position, Type::VISITED); 
-    addWalls(starting_position, wallList);
-    while(!wallList.empty()){
-        std::pair<Wall, int> randomWallDetails = getRandomWallDetails(wallList);
-        Wall randomWall = randomWallDetails.first;
-        popWall(randomWallDetails.second, wallList);
-        if (onlyOneVisited(randomWall)){
-            Position unvisited = getUnvisited(randomWall);
-            Position between = { // since every pair of blocks have 2 units gap
-                (randomWall.PosBlock1.row + randomWall.PosBlock2.row) / 2,
-                (randomWall.PosBlock1.col + randomWall.PosBlock2.col) / 2,
-            };
-            setBlockType(unvisited, Type::VISITED);
-            setBlockType(between, Type::PASSAGE);
-            addWalls(unvisited, wallList);
-        }
-    }
-
-    mazeGenerated = true;
-    
+    addWalls(starting_position, wallList);    
 }
 
+void PrimGenerator::generateMazeStep(int batchSize){
+    for (int i = 0; i < batchSize; ++i){
+        if(!wallList.empty()){
+            std::pair<Wall, int> randomWallDetails = getRandomWallDetails(wallList, false);
+            Wall randomWall = randomWallDetails.first;
+            popWall(randomWallDetails.second, wallList);
+
+            if (hasActive) setBlockType(activeBlock, Type::VISITED);
+            if (onlyOneVisited(randomWall)){
+                Position unvisited = getUnvisited(randomWall);
+                setActiveBlock(unvisited); // makes the block at unvisited active
+
+                Position between = { // since every pair of blocks have 2 units gap
+                    (randomWall.PosBlock1.row + randomWall.PosBlock2.row) / 2,
+                    (randomWall.PosBlock1.col + randomWall.PosBlock2.col) / 2,
+                };
+                setBlockType(between, Type::PASSAGE);
+                addWalls(unvisited, wallList);
+            }
+        }
+        else {
+            mazeGenerated = true;
+            hasActive = false;
+        }
+    }
+}
+
+
+void PrimGenerator::setActiveBlock(Position blockPos){
+    activeBlock = blockPos;
+    setBlockType(activeBlock, Type::ACTIVE);
+    hasActive = true;
+}
 
 Position PrimGenerator::getRandomPosition(){
     int rows = getGridRows();
@@ -47,9 +66,13 @@ Position PrimGenerator::getUnvisited(Wall& wall){
     else return wall.PosBlock2;
 }
 
-std::pair<PrimGenerator::Wall, int> PrimGenerator::getRandomWallDetails(std::vector<Wall>& wallList){
+std::pair<PrimGenerator::Wall, int> PrimGenerator::getRandomWallDetails(std::vector<Wall>& wallList, bool bias){
     std::uniform_int_distribution<int> dist(0, wallList.size() - 1);
     int index = dist(generator);
+    if (bias) {
+        std::bernoulli_distribution chooseBack(1);
+        if (chooseBack(generator)) index = wallList.size() - 1; // generates longer corridors
+    }
     return {wallList[index], index};
 }
 
