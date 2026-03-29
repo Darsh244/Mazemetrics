@@ -12,11 +12,11 @@ constexpr unsigned WINDOW_WIDTH = 800;
 int main(){
     sf::RenderWindow window;
     window.create(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Window");
-    window.setFramerateLimit(20);
+    window.setFramerateLimit(60);
 
-    Grid grid(10, 10); 
+    Grid grid(50, 50); 
     grid.fill(window.getSize());
-    std::unique_ptr<PrimGenerator> mazeGenerator = std::make_unique<PrimGenerator>(grid);
+    std::unique_ptr<MazeGenerator> mazeGenerator = std::make_unique<PrimGenerator>(grid);
     mazeGenerator->generateMaze();
     
     

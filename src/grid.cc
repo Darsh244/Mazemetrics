@@ -16,7 +16,7 @@ void Grid::draw(sf::RenderWindow &win){
 }
 
 void Grid::fill(const sf::Vector2u windowSize){
-    blocks.reserve(rows * columns);
+    blocks.reserve(rows);
 
     float blockSize = std::min(
         float(windowSize.x) / columns,
@@ -28,7 +28,7 @@ void Grid::fill(const sf::Vector2u windowSize){
         for (int col = 0; col < columns; ++ col){
 
             Block block(Type::WALL); // taking positions with any even entry as WALL because we want border to be WALLS
-            if (row % 2 == 1 && col % 2 == 1){ 
+            if (row % 2 == 1 && col % 2 == 1){
                 block.setType(Type::UNVISITED);
             }
             currentRow.push_back(block);

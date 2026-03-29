@@ -30,7 +30,6 @@ void PrimGenerator::generateMazeStep(int batchSize){
             if (onlyOneVisited(randomWall)){
                 Position unvisited = getUnvisited(randomWall);
                 setActiveBlock(unvisited); // makes the block at unvisited active
-
                 Position between = { // since every pair of blocks have 2 units gap
                     (randomWall.PosBlock1.row + randomWall.PosBlock2.row) / 2,
                     (randomWall.PosBlock1.col + randomWall.PosBlock2.col) / 2,
@@ -56,9 +55,10 @@ void PrimGenerator::setActiveBlock(Position blockPos){
 Position PrimGenerator::getRandomPosition(){
     int rows = getGridRows();
     int columns = getGridColumns();
-    std::uniform_int_distribution<int> rowDist(0, ((rows + 1) / 2) - 1); // rows = 2 * r - 1 
-    std::uniform_int_distribution<int> colDist(0, ((columns + 1) / 2) - 1);
-    return {rowDist(generator) * 2 + 1, colDist(generator) * 2 + 1}; // unvisited blocks are on odd positions
+    std::uniform_int_distribution<int> rowDist(0, ((rows - 1) / 2) - 1); // rows = 2 * r + 1; need upper bound as r-1
+    std::uniform_int_distribution<int> colDist(0, ((columns - 1) / 2) - 1);
+    Position pos = {rowDist(generator) * 2 + 1, colDist(generator) * 2 + 1};
+    return pos; // unvisited blocks are on odd positions
 }
 
 Position PrimGenerator::getUnvisited(Wall& wall){
