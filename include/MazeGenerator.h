@@ -15,20 +15,13 @@ class MazeGenerator{
         std::mt19937 generator;
         bool mazeGenerated;
 
-
-        bool outOfBounds(Position blockPos);
-
-        sf::Vertex* getBlockVertices(Position blockPos);
-        Block& getBlock(Position blockPos);
+        int getRows() const;
+        int getColumns() const;
+        void setBlockType(Position blockPos, const Type type);
+        
         Type getBlockType(Position blockPos);
 
-        void setBlockType(Position blockPos, const Type type);
-
-        void setBlockPosition(Position blockPos, float blockSize);
-        void setBlockColor(Position blockPos, const Type type);
-
-        int getGridRows() const;
-        int getGridColumns() const;
+        bool outOfBounds(Position blockPos);
 
     public:
         MazeGenerator(Grid& g, unsigned int seed = std::random_device{}());

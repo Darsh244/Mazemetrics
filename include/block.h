@@ -7,7 +7,9 @@ enum class Type : int{
     UNVISITED,
     WALL,
     PASSAGE,
-    ACTIVE
+    ACTIVE,
+    START,
+    END,
 };
 
 class Block {

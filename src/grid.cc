@@ -18,7 +18,7 @@ void Grid::draw(sf::RenderWindow &win){
 void Grid::fill(const sf::Vector2u windowSize){
     blocks.reserve(rows);
 
-    float blockSize = std::min(
+    blockSize = std::min(
         float(windowSize.x) / columns,
         float(windowSize.y) / rows
     ); // each block should be a square
@@ -33,7 +33,7 @@ void Grid::fill(const sf::Vector2u windowSize){
             }
             currentRow.push_back(block);
 
-            setBlockPosition({row, col}, blockSize);
+            setBlockPosition({row, col});
             setBlockColor({row, col}, block.getType());
         }
         blocks.push_back(currentRow);
@@ -46,16 +46,11 @@ void Grid::reset(const sf::Vector2u windowSize){
 }
 
 
-sf::Vertex* Grid::getVerticesOfBlockAtPos(Position blockPos){
-    int r = blockPos.row;
-    int c = blockPos.col;
-    return &vertices[(r * columns + c) * 6];
-}
 
-void Grid::setBlockPosition(Position blockPos, float blockSize){
+void Grid::setBlockPosition(Position blockPos){
     int r = blockPos.row;
     int c = blockPos.col;
-    sf::Vertex* blockVertices = getVerticesOfBlockAtPos(blockPos);
+    sf::Vertex* blockVertices = getBlockVertices(blockPos);
     blockVertices[0].position = sf::Vector2f(c * blockSize, r * blockSize);
     blockVertices[1].position = sf::Vector2f(c * blockSize + blockSize, r * blockSize);
     blockVertices[2].position = sf::Vector2f(c* blockSize + blockSize, r * blockSize + blockSize);
@@ -83,17 +78,46 @@ void Grid::setBlockColor(Position blockPos, const Type type){
         case Type::ACTIVE:
             color = COLOR::RED;
             break;
+        case Type::START:
+            color = COLOR::GREEN;
+            break;
+        case Type::END:
+            color = COLOR::RED;
+            break;
     }
 
-    sf::Vertex* block = getVerticesOfBlockAtPos(blockPos);
+    sf::Vertex* block = getBlockVertices(blockPos);
     for (int i = 0; i < 6; ++i){
         block[i].color = color;
     }
 }
 
+void Grid::setBlockType(Position blockPos, const Type type){
+    getBlock(blockPos).setType(type);
+    setBlockColor(blockPos, type);
+}
+
 
 Block& Grid::getBlockAtPos(Position blockPos){
     return blocks[blockPos.row][blockPos.col];
+}
+
+sf::Vertex* Grid::getBlockVertices(Position blockPos){
+    int r = blockPos.row;
+    int c = blockPos.col;
+    return &vertices[(r * columns + c) * 6];
+}
+
+Block& Grid::getBlock(Position blockPos){
+    return blocks[blockPos.row][blockPos.col];
+}
+
+Type Grid::getBlockType(Position blockPos){
+    return getBlock(blockPos).getType();
+}
+
+bool Grid::outOfBounds(Position blockPos){
+    return blockPos.row < 0 || blockPos.row >= rows || blockPos.col < 0 || blockPos.col >= columns;
 }
 
 

@@ -13,6 +13,8 @@ add_executable(maze
     src/MazeGenerator.cc
     src/PrimGenerator.cc
     src/Position.cc
+    src/PathFinder.cc
+    src/BFS.cc
 )
 
 target_include_directories(maze PRIVATE include)

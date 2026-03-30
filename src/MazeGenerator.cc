@@ -1,45 +1,26 @@
 #include "../include/MazeGenerator.h"
 #include "../include/Position.h"
 #include "../include/Grid.h"
-#include "Block.h"
 
-bool MazeGenerator::outOfBounds(Position blockPos){
-    int rows = getGridRows();
-    int columns = getGridColumns();
-    return blockPos.row < 0 || blockPos.row >= rows || blockPos.col < 0 || blockPos.col >= columns;
+
+int MazeGenerator::getRows() const {
+        return grid.getRows();
 }
 
-sf::Vertex* MazeGenerator::getBlockVertices(Position blockPos){
-    return grid.getVerticesOfBlockAtPos(blockPos);   
+int MazeGenerator::getColumns() const {
+        return grid.getColumns();
 }
 
-Block& MazeGenerator::getBlock(Position blockPos){
-    return grid.getBlockAtPos(blockPos);
+void MazeGenerator::setBlockType(Position blockPos, const Type type) {
+        grid.setBlockType(blockPos, type);
 }
 
 Type MazeGenerator::getBlockType(Position blockPos){
-    return getBlock(blockPos).getType();
+        return grid.getBlockType(blockPos);
 }
 
-void MazeGenerator::setBlockType(Position blockPos, const Type type){
-    getBlock(blockPos).setType(type);
-    setBlockColor(blockPos, type);
-}
-
-void MazeGenerator::setBlockPosition(Position blockPos, float blockSize){
-    grid.setBlockPosition(blockPos, blockSize);
-}
-
-void MazeGenerator::setBlockColor(Position blockPos, const Type type){
-    grid.setBlockColor(blockPos, type);
-}
-
-int MazeGenerator::getGridRows() const {
-    return grid.getRows();
-}
-
-int MazeGenerator::getGridColumns() const { 
-    return grid.getColumns();
+bool MazeGenerator::outOfBounds(Position blockPos){
+        return grid.outOfBounds(blockPos);
 }
 
 MazeGenerator::MazeGenerator(Grid& grid, unsigned int seed) : 

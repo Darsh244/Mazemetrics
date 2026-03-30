@@ -1,13 +1,12 @@
 #include "../include/PrimGenerator.h"
 #include  "../include/Block.h"
-#include "MazeGenerator.h"
-#include "Position.h"
+#include "../include/Grid.h"
 #include <random>
 
 
 PrimGenerator::PrimGenerator(Grid& g, unsigned int seed) : MazeGenerator(g, seed) {
-    int rows = getGridRows();
-    int columns = getGridColumns();
+    int rows = getRows();
+    int columns = getColumns();
     wallList.reserve(rows * columns / 2);
     hasActive = false;
 }
@@ -53,8 +52,8 @@ void PrimGenerator::setActiveBlock(Position blockPos){
 }
 
 Position PrimGenerator::getRandomPosition(){
-    int rows = getGridRows();
-    int columns = getGridColumns();
+    int rows = getRows();
+    int columns = getColumns();
     std::uniform_int_distribution<int> rowDist(0, ((rows - 1) / 2) - 1); // rows = 2 * r + 1; need upper bound as r-1
     std::uniform_int_distribution<int> colDist(0, ((columns - 1) / 2) - 1);
     Position pos = {rowDist(generator) * 2 + 1, colDist(generator) * 2 + 1};
