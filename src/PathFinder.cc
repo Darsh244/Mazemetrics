@@ -22,15 +22,16 @@ PathFinder::PathFinder(Grid& g) : grid(g) {
 }
 
 void PathFinder::setStartEnd(Position blockPos){
-    if (getBlockType(blockPos) == Type::WALL) return;
-
-    if (!start.has_value()){
-        start = blockPos;
-        setBlockType(start.value(), Type::START);
-    }
-    else if (!end.has_value()){
-        end = blockPos;
-        setBlockType(end.value(), Type::END);
+    Type type = getBlockType(blockPos);
+    if (type == Type::VISITED || type == Type::PASSAGE){
+        if (!start.has_value()){
+            start = blockPos;
+            setBlockType(start.value(), Type::START);
+        }
+        else if (!end.has_value()){
+            end = blockPos;
+            setBlockType(end.value(), Type::END);
+        }
     }
 }
 

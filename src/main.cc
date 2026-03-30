@@ -35,6 +35,7 @@ int main(){
                 if (keypressed->scancode == sf::Keyboard::Scancode::R){
                     grid.reset(window.getSize());
                     mazeGenerator = std::make_unique<PrimGenerator>(grid);
+                    pathFinder = std::make_unique<BFS>(grid);
                     mazeGenerator->generateMaze();
                 }
             }
