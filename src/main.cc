@@ -1,9 +1,6 @@
 #include "../include/Grid.h"
 #include "../include/PrimGenerator.h"
-#include "../include/MazeGenerator.h"
-#include "../include/PathFinder.h"
 #include "../include/BFS.h"
-#include "../include/Position.h"
 #include <algorithm>
 #include <memory>
 #include <random>
@@ -20,9 +17,7 @@ int main(){
     grid.fill(window.getSize());
     std::unique_ptr<MazeGenerator> mazeGenerator = std::make_unique<PrimGenerator>(grid);
     std::unique_ptr<PathFinder> pathFinder = std::make_unique<BFS>(grid);
-    mazeGenerator->generateMaze();
-    
-    
+    mazeGenerator->generateMaze();    
     while (window.isOpen()){
         while (const auto event = window.pollEvent()){
             if (event->is<sf::Event::Closed>()){
@@ -38,9 +33,15 @@ int main(){
                     pathFinder = std::make_unique<BFS>(grid);
                     mazeGenerator->generateMaze();
                 }
+                if (keypressed->scancode == sf::Keyboard::Scancode::Space){
+                    if (pathFinder->pathFinderReady() && !pathFinder->pathFindingStart()){
+                        pathFinder->findPath();
+                    }
+                }
             }
             else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
                 if (mazeGenerator->generationDone()){
+                    // TODO - Fix weird stuff happening with large grid sizes when selecting start, end
                     Position blockPos = {mouseButtonPressed->position.y, mouseButtonPressed->position.x};
                     blockPos = blockPos / grid.getBlockSize(); // maps pixel position to row, col
 
@@ -56,8 +57,15 @@ int main(){
         }
 
         window.clear(sf::Color(240, 240, 240));
-        if (!mazeGenerator->generationDone()){
-            mazeGenerator->generateMazeStep(2);
+
+        if(!mazeGenerator->generationDone()){
+            mazeGenerator->generateMazeStep(10);
+        }      
+        if (pathFinder->pathFindingStart() && !pathFinder->foundPath()){
+            pathFinder->findPathStep(5);
+        }
+        if (pathFinder->foundPath() && !pathFinder->isPathReconstructed()){
+            pathFinder->reconstructPathStep(2);
         }
         grid.draw(window);
         window.display();

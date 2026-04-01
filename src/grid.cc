@@ -84,6 +84,12 @@ void Grid::setBlockColor(Position blockPos, const Type type){
         case Type::END:
             color = COLOR::RED;
             break;
+        case Type::EXPLORED:
+            color = COLOR::LBLUE;
+            break;
+        case Type::PATH:
+            color = COLOR::GOLD;
+            break;
     }
 
     sf::Vertex* block = getBlockVertices(blockPos);

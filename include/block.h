@@ -10,6 +10,8 @@ enum class Type : int{
     ACTIVE,
     START,
     END,
+    EXPLORED,
+    PATH,
 };
 
 class Block {

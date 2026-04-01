@@ -12,7 +12,7 @@ namespace COLOR {
     const sf::Color LBLUE(173, 216, 230);
     const sf::Color LGREY(245, 245, 245);
     const sf::Color BLACK(0, 0, 0);
-    const sf::Color YELLOW(255, 255, 0);
+    const sf::Color GOLD (255, 215, 0);
     const sf::Color WHITE(255, 255, 255);
 
 };

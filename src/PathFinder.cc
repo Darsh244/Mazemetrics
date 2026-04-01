@@ -16,9 +16,20 @@ bool PathFinder::outOfBounds(Position blockPos){
         return grid.outOfBounds(blockPos);
 }
 
+
+int PathFinder::getRows() const{
+    return grid.getRows();
+}
+
+int PathFinder::getColumns() const{
+    return grid.getColumns();
+}
+
 PathFinder::PathFinder(Grid& g) : grid(g) {
     start = std::nullopt;
     end = std::nullopt;
+    pathFound = false;
+    pathFindingStarted = false;
 }
 
 void PathFinder::setStartEnd(Position blockPos){
