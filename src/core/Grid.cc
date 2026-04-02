@@ -1,6 +1,5 @@
-#include "../include/Grid.h"
-#include "../include/Block.h"
-#include "../include/Position.h"
+#include "core/Grid.h"
+#include "core/Position.h"
 
 Grid::Grid(int r, int c){
     rows = 2 * r + 1; // Block Block -> Wall Block Wall Block Wall

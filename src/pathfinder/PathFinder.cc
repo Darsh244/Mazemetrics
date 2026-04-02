@@ -1,8 +1,5 @@
-#include "../include/PathFinder.h"
-#include "../include/Grid.h"
-#include "../include/Position.h"
-#include "Block.h"
-#include <optional>
+#include "pathfinder/PathFinder.h"
+#include "core/Grid.h"
 
 void PathFinder::setBlockType(Position blockPos, const Type type){
     grid.setBlockType(blockPos, type);
@@ -28,6 +25,7 @@ int PathFinder::getColumns() const{
 PathFinder::PathFinder(Grid& g) : grid(g) {
     start = std::nullopt;
     end = std::nullopt;
+    currentPath = std::nullopt;
     pathFound = false;
     pathFindingStarted = false;
 }

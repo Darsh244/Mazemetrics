@@ -1,9 +1,5 @@
-#include "../include/BFS.h"
-#include "../include/Block.h"
-#include "../include/Position.h"
-
-#include <vector>
-
+#include "pathfinder/BFS.h"
+#include "core/Block.h"
 
 void BFS::findPath(){
     Position starting_block;
@@ -22,7 +18,7 @@ void BFS::findPathStep(int batchSize){
             std::vector<Position> unexplored = getNonExploredNeighbours(current_block);
             for (auto& block:unexplored){
                 if (getBlockType(block) == Type::END){
-                    currentPathPos = block;
+                    currentPath = block;
                     pathFound = true;
                     break;
                 }
@@ -37,10 +33,10 @@ void BFS::findPathStep(int batchSize){
 
 void BFS::reconstructPathStep(int batchSize){
     for (int i = 0; i < batchSize; ++i){
-        if (currentPathPos != start.value()){
-            if (getBlockType(currentPathPos) != Type::END) setBlockType(currentPathPos, Type::PATH);
-            Position nextPathPos = parentMap[currentPathPos];
-            currentPathPos = nextPathPos;
+        if (currentPath != start.value()){
+            if (getBlockType(currentPath.value()) != Type::END) setBlockType(currentPath.value(), Type::PATH);
+            Position nextPathPos = cameFrom[currentPath.value()];
+            currentPath = nextPathPos;
         }
     }
 }
@@ -56,7 +52,7 @@ std::vector<Position> BFS::getNonExploredNeighbours(Position blockPos){
             Type type = getBlockType(neighbour);
             if (type != Type::WALL){
                 unexplored.push_back(neighbour);
-                parentMap[neighbour] = blockPos;
+                cameFrom[neighbour] = blockPos;
             }
         }
     }

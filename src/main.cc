@@ -1,9 +1,7 @@
-#include "../include/Grid.h"
-#include "../include/PrimGenerator.h"
-#include "../include/BFS.h"
-#include <algorithm>
+#include "core/Grid.h"
+#include "mazegen/PrimGenerator.h"
+#include "pathfinder/BFS.h"
 #include <memory>
-#include <random>
 
 constexpr unsigned WINDOW_HEIGHT = 800;
 constexpr unsigned WINDOW_WIDTH = 800;
@@ -18,6 +16,7 @@ int main(){
     std::unique_ptr<MazeGenerator> mazeGenerator = std::make_unique<PrimGenerator>(grid);
     std::unique_ptr<PathFinder> pathFinder = std::make_unique<BFS>(grid);
     mazeGenerator->generateMaze();    
+
     while (window.isOpen()){
         while (const auto event = window.pollEvent()){
             if (event->is<sf::Event::Closed>()){

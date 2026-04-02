@@ -1,6 +1,6 @@
-#include "../include/MazeGenerator.h"
-#include "../include/Position.h"
-#include "../include/Grid.h"
+#include "mazegen/MazeGenerator.h"
+#include "core/Position.h"
+#include "core/Grid.h"
 
 
 int MazeGenerator::getRows() const {

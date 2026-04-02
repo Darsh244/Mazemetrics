@@ -1,6 +1,5 @@
-#include "../include/Position.h"
+#include "core/Position.h"
 #include <iostream>
-#include <ostream>
 
 std::ostream& operator<<(std::ostream& os, const Position& pos) {
     os << "(" << pos.row << ", " << pos.col << ")";
@@ -13,4 +12,9 @@ Position Position::operator/(int scalar){
 
 bool Position::operator==(const Position& other) const{
     return row == other.row && col == other.col;
+}
+
+size_t Hasher::operator() (const Position& p) const{
+    size_t hash = p.row ^ (p.col << 1);
+    return hash;
 }

@@ -9,3 +9,6 @@ struct Position {
     Position operator/(int scalar);
     friend std::ostream& operator<<(std::ostream& os, const Position& pos);
 };
+struct Hasher {
+    size_t operator() (const Position& p) const;
+};

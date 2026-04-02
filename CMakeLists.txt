@@ -7,14 +7,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(SFML 3 COMPONENTS Graphics Window System REQUIRED)
 add_executable(maze 
-    src/Main.cc 
-    src/Block.cc 
-    src/Grid.cc
-    src/MazeGenerator.cc
-    src/PrimGenerator.cc
-    src/Position.cc
-    src/PathFinder.cc
-    src/BFS.cc
+    src/main.cc 
+    src/core/Grid.cc
+    src/core/Position.cc
+    src/mazegen/MazeGenerator.cc
+    src/mazegen/PrimGenerator.cc
+    src/pathfinder/PathFinder.cc
+    src/pathfinder/BFS.cc
 )
 
 target_include_directories(maze PRIVATE include)

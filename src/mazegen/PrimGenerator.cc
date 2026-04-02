@@ -1,8 +1,5 @@
-#include "../include/PrimGenerator.h"
-#include  "../include/Block.h"
-#include "../include/Grid.h"
-#include <random>
-
+#include "mazegen/PrimGenerator.h"
+#include "core/Grid.h"
 
 PrimGenerator::PrimGenerator(Grid& g, unsigned int seed) : MazeGenerator(g, seed) {
     int rows = getRows();
