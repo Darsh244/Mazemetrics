@@ -1,18 +1,14 @@
 #include "core/Grid.h"
 #include "core/Position.h"
+#include "renderer/Renderer.h"
 
-Grid::Grid(int r, int c){
-    rows = 2 * r + 1; // Block Block -> Wall Block Wall Block Wall
-    columns = 2 * c + 1;
+Grid::Grid(sf::Vector2u grid_size){
+    rows = 2 * grid_size.x + 1; // Block Block -> Wall Block Wall Block Wall
+    columns = 2 * grid_size.y + 1;
     vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
     vertices.resize(rows * columns * 6);
 }
 
-
-
-void Grid::draw(sf::RenderWindow &win){
-    win.draw(vertices);
-}
 
 void Grid::fill(const sf::Vector2u windowSize){
     blocks.reserve(rows);
@@ -26,7 +22,7 @@ void Grid::fill(const sf::Vector2u windowSize){
         std::vector<Block> currentRow;
         for (int col = 0; col < columns; ++ col){
 
-            Block block(Type::WALL); // taking positions with any even entry as WALL because we want border to be WALLS
+            Block block(Type::WALL); // want border to be WALL so any even coord = Wall
             if (row % 2 == 1 && col % 2 == 1){
                 block.setType(Type::UNVISITED);
             }

@@ -5,19 +5,6 @@
 
 struct Position;
 enum class Type : int;
-
-namespace COLOR {
-    const sf::Color RED(255, 0, 0);
-    const sf::Color GREEN(0, 255, 0);
-    const sf::Color LBLUE(173, 216, 230);
-    const sf::Color LGREY(245, 245, 245);
-    const sf::Color BLACK(0, 0, 0);
-    const sf::Color GOLD (255, 215, 0);
-    const sf::Color WHITE(255, 255, 255);
-
-};
-
-
 class Grid {
     int rows;
     int columns;
@@ -25,13 +12,14 @@ class Grid {
     sf::VertexArray vertices;
     std::vector<std::vector<Block>> blocks;
     public:
-        Grid(int r, int c);
+        Grid(sf::Vector2u grid_size);
         void fill(const sf::Vector2u windowSize);
-        void draw(sf::RenderWindow& win);
         void reset(const sf::Vector2u windowSize);
+
         int getRows() const {return rows;}
         int getColumns() const {return columns;}
         float getBlockSize() const {return blockSize;}
+        sf::VertexArray& getVertexArray() {return vertices;}
     
     private:
       
