@@ -13,11 +13,11 @@ Grid::Grid(sf::Vector2u grid_size){
 void Grid::fill(const sf::Vector2u windowSize){
     blocks.reserve(rows);
 
-    blockSize = std::min(
+    blockSize = floor(std::min(
         float(windowSize.x) / columns,
         float(windowSize.y) / rows
-    ); // each block should be a square
-  
+    )); // each block should be a square
+    
     for (int row = 0; row < rows; ++ row){
         std::vector<Block> currentRow;
         for (int col = 0; col < columns; ++ col){

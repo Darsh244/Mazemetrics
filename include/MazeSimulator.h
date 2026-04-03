@@ -28,6 +28,10 @@ class MazeSimulator {
     std::string currentPathFinderAlgorithm;
     STATE state;
 
+    int mazeGenerationSpeed;
+    int pathFindingSpeed;
+    int pathReconstructionSpeed;
+
     bool requestedWindowClose;
     std::unordered_map<std::string, std::function<void()>> mazeGeneratorMap;
     std::unordered_map<std::string, std::function<void()>> pathFinderMap;
@@ -41,6 +45,10 @@ class MazeSimulator {
         void setMazeGenerationAlgorithm(const std::string& algorithm);
         void setPathFindingAlgorithm(const std::string& algorithm);
         Grid& getGrid();
+
+        void setMazeGenerationSpeed(int i) { mazeGenerationSpeed = i;}
+        void setPathFindingSpeed(int i) {pathFindingSpeed = i;}
+        void setPathReconstructionSpeed(int i) {pathReconstructionSpeed = i;}
     
     private:
         void reset();

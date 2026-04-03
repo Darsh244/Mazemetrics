@@ -2,17 +2,21 @@
 #include "MazeSimulator.h"
 #include <memory>
 
-constexpr unsigned WINDOW_HEIGHT = 800;
-constexpr unsigned WINDOW_WIDTH = 800;
+constexpr unsigned WINDOW_HEIGHT = 1600;
+constexpr unsigned WINDOW_WIDTH = 1600;
 
 int main(){
     sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Window");
     window.setFramerateLimit(60);
 
-    MazeSimulator simulator({10, 10});
+    MazeSimulator simulator({60, 60});
     simulator.initialize(window.getSize());
     simulator.setMazeGenerationAlgorithm("PRIM");
     simulator.setPathFindingAlgorithm("BFS");
+
+    simulator.setMazeGenerationSpeed(100);
+    simulator.setPathFindingSpeed(80);
+    simulator.setPathReconstructionSpeed(20);
 
     while (window.isOpen()){
         while (const auto event = window.pollEvent()){

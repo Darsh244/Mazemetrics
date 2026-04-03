@@ -56,7 +56,6 @@ void MazeSimulator::handleEvents(const sf::Event& event){
     }
     else if (const auto* mouseButtonPressed = event.getIf<sf::Event::MouseButtonPressed>()){
         if (mazeGenerator->generationDone()){
-            // TODO - Fix weird stuff happening with large grid sizes when selecting start, end
             Position blockPos = {mouseButtonPressed->position.y, mouseButtonPressed->position.x};
             blockPos = blockPos / grid.getBlockSize(); // maps pixel position to row, col
 
@@ -86,15 +85,15 @@ void MazeSimulator::runSimulation(){
         state = STATE::GeneratingMaze;
     }
     if (state == STATE::GeneratingMaze){
-        mazeGenerator->generateMazeStep(10);
+        mazeGenerator->generateMazeStep(mazeGenerationSpeed);
         if (mazeGenerator->generationDone()) state = STATE::MazeGenerated;
     }
     if (state == STATE::FindingPath){
-        pathFinder->findPathStep(5);
+        pathFinder->findPathStep(pathFindingSpeed);
         if (pathFinder->foundPath()) state = STATE::PathFound;
     }
     if (state == STATE::PathFound){
-        pathFinder->reconstructPathStep(2);
+        pathFinder->reconstructPathStep(pathReconstructionSpeed);
         if (pathFinder->isPathReconstructed()) state = STATE::Finished;
     }
 }
