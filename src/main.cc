@@ -12,11 +12,11 @@ int main(){
     MazeSimulator simulator({60, 60});
     simulator.initialize(window.getSize());
     simulator.setMazeGenerationAlgorithm("PRIM");
-    simulator.setPathFindingAlgorithm("BFS");
+    simulator.setPathFindingAlgorithm("DFS");
 
     simulator.setMazeGenerationSpeed(100);
-    simulator.setPathFindingSpeed(80);
-    simulator.setPathReconstructionSpeed(20);
+    simulator.setPathFindingSpeed(20);
+    simulator.setPathReconstructionSpeed(10);
 
     while (window.isOpen()){
         while (const auto event = window.pollEvent()){

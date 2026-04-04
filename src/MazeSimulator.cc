@@ -1,6 +1,7 @@
 #include "MazeSimulator.h"
 #include "mazegen/PrimGenerator.h"
 #include "pathfinder/BFS.h"
+#include "pathfinder/DFS.h"
 
 MazeSimulator::MazeSimulator(sf::Vector2u grid_size) : grid(grid_size){
     requestedWindowClose = false;
@@ -10,6 +11,7 @@ MazeSimulator::MazeSimulator(sf::Vector2u grid_size) : grid(grid_size){
 void MazeSimulator::initAlgorithmMaps(){
     mazeGeneratorMap["PRIM"] = [&]() {mazeGenerator = std::make_unique<PrimGenerator>(grid);};
     pathFinderMap["BFS"] = [&]() {pathFinder = std::make_unique<BFS>(grid);};
+    pathFinderMap["DFS"] = [&]() {pathFinder = std::make_unique<DFS>(grid);};
 }
 
 

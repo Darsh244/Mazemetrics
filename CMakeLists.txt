@@ -15,6 +15,7 @@ add_executable(maze
     src/mazegen/PrimGenerator.cc
     src/pathfinder/PathFinder.cc
     src/pathfinder/BFS.cc
+    src/pathfinder/DFS.cc
     src/renderer/Renderer.cc
 )
 
