@@ -17,8 +17,11 @@ add_executable(maze
     src/pathfinder/BFS.cc
     src/pathfinder/DFS.cc
     src/renderer/Renderer.cc
+    src/renderer/Sidebar.cc
+    src/renderer/Button.cc
 )
 
 target_include_directories(maze PRIVATE include)
 target_link_libraries(maze PRIVATE SFML::Graphics SFML::Window SFML::System)
+target_compile_definitions(maze PRIVATE PROJECT_ROOT="${CMAKE_SOURCE_DIR}")
 
