@@ -3,6 +3,7 @@
 #include "mazegen/MazeGenerator.h"
 #include "pathfinder/PathFinder.h"
 
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <functional>
 #include <memory>
@@ -33,7 +34,13 @@ class MazeSimulator {
   int pathReconstructionSpeed;
 
   bool requestedWindowClose;
-  unsigned uiSidebarWidth = 0;
+  unsigned uiSidebarWidth = 0; // pixels reserved to the left of the grid for UI
+
+  unsigned uiStatsPanelWidth =
+      0; // pixels reserved to the right of the grid for StatsPanel
+
+  sf::Clock pathFindingClock;
+  float pathFindingElapsedMs = 0.f; // keeps ticking while running
   std::unordered_map<std::string, std::function<void()>> mazeGeneratorMap;
   std::unordered_map<std::string, std::function<void()>> pathFinderMap;
 
@@ -42,6 +49,7 @@ public:
   void initialize(sf::Vector2u size);
   void handleEvents(const sf::Event &event);
   void setUISidebarWidth(unsigned width) { uiSidebarWidth = width; }
+  void setUIStatsPanelWidth(unsigned width) { uiStatsPanelWidth = width; }
   void runSimulation();
   bool shouldCloseWindow();
 
@@ -56,6 +64,15 @@ public:
   void setMazeGenerationSpeed(int i) { mazeGenerationSpeed = i; }
   void setPathFindingSpeed(int i) { pathFindingSpeed = i; }
   void setPathReconstructionSpeed(int i) { pathReconstructionSpeed = i; }
+
+  // Stats for the sidebar readout
+  int getCellsVisited() const {
+    return pathFinder ? pathFinder->getCellsVisited() : 0;
+  }
+  int getPathLength() const {
+    return pathFinder ? pathFinder->getPathLength() : 0;
+  }
+  float getPathFindingElapsedMs() const { return pathFindingElapsedMs; }
 
 private:
   void reset();

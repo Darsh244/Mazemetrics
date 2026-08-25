@@ -19,6 +19,7 @@ add_executable(maze
     src/renderer/Renderer.cc
     src/renderer/Sidebar.cc
     src/renderer/Button.cc
+    src/renderer/StatsPanel.cc
 )
 
 target_include_directories(maze PRIVATE include)

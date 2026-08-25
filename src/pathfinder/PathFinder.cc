@@ -2,6 +2,8 @@
 #include "core/Grid.h"
 
 void PathFinder::setBlockType(Position blockPos, const Type type) {
+  if (type == Type::PATH)
+    ++pathLength;
   grid.setBlockType(blockPos, type);
 }
 

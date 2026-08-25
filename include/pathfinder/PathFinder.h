@@ -25,6 +25,9 @@ protected:
   int getRows() const;
   int getColumns() const;
 
+private:
+  int pathLength = 0;
+
 public:
   PathFinder(Grid &g);
 
@@ -37,9 +40,14 @@ public:
   bool pathFindingStart() const { return pathFindingStarted; }
   bool isPathReconstructed() const { return pathReconstructed; }
 
+  // Stats
+  int getCellsVisited() const { return static_cast<int>(cameFrom.size()); }
+  int getPathLength() const { return pathLength; }
+
   void setStartEnd(Position blockPos);
   void removeStartEnd(Position blockPos);
 
+  // Carries over start/end positions from another pathfinder instance
   void transferStartEnd(const PathFinder &other);
 
   virtual ~PathFinder() {}

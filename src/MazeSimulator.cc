@@ -60,6 +60,8 @@ void MazeSimulator::handleEvents(const sf::Event &event) {
     case sf::Keyboard::Scancode::Space:
       if (pathFinder->pathFinderReady() && !pathFinder->pathFindingStart()) {
         state = STATE::FindingPath;
+        pathFindingClock.restart();
+        pathFindingElapsedMs = 0.f;
         pathFinder->findPath();
       }
       break;
@@ -73,6 +75,8 @@ void MazeSimulator::handleEvents(const sf::Event &event) {
         mouseButtonPressed->position.x - static_cast<int>(uiSidebarWidth);
     if (adjustedX < 0)
       return; // click landed in the sidebar, not the grid
+    if (adjustedX >= static_cast<int>(window_size.x))
+      return; // click landed in the stats panel, not the grid
 
     if (mazeGenerator->generationDone()) {
       Position blockPos = {mouseButtonPressed->position.y, adjustedX};
@@ -93,6 +97,7 @@ void MazeSimulator::reset() {
   grid.reset(window_size);
   mazeGeneratorMap[currentMazeGeneratorAlgorithm]();
   pathFinderMap[currentPathFinderAlgorithm]();
+  pathFindingElapsedMs = 0.f;
   state = STATE::Start;
   requestedWindowClose = false;
 }
@@ -109,6 +114,7 @@ void MazeSimulator::runSimulation() {
   }
   if (state == STATE::FindingPath) {
     pathFinder->findPathStep(pathFindingSpeed);
+    pathFindingElapsedMs = pathFindingClock.getElapsedTime().asMilliseconds();
     if (pathFinder->foundPath())
       state = STATE::PathFound;
   }
