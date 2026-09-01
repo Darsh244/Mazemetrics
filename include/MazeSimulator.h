@@ -35,7 +35,6 @@ class MazeSimulator {
 
   bool requestedWindowClose;
   unsigned uiSidebarWidth = 0; // pixels reserved to the left of the grid for UI
-
   unsigned uiStatsPanelWidth =
       0; // pixels reserved to the right of the grid for StatsPanel
 
@@ -71,6 +70,12 @@ public:
   }
   int getPathLength() const {
     return pathFinder ? pathFinder->getPathLength() : 0;
+  }
+  int getMaxFrontierSize() const {
+    return pathFinder ? pathFinder->getMaxFrontierSize() : 0;
+  }
+  double getPathEfficiencyPercent() const {
+    return pathFinder ? pathFinder->getPathEfficiencyPercent() : 0.0;
   }
   float getPathFindingElapsedMs() const { return pathFindingElapsedMs; }
 

@@ -27,6 +27,7 @@ void BFS::findPathStep(int batchSize) {
           addToQueue(block);
         }
       }
+      recordFrontierSize(static_cast<int>(queue.size()));
     }
   }
 }

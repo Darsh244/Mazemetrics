@@ -21,6 +21,12 @@ std::string formatMs(float ms) {
   return oss.str();
 }
 
+std::string formatPercent(double percent) {
+  std::ostringstream oss;
+  oss << std::fixed << std::setprecision(1) << percent << "%";
+  return oss.str();
+}
+
 int main() {
   sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}),
                           "Window");
@@ -49,10 +55,13 @@ int main() {
                                   },
                                   simulator.getCurrentPathFindingAlgorithm()}});
 
-  StatsPanel statsPanel(
-      FONT_PATH, float(WINDOW_WIDTH) - STATS_PANEL_WIDTH, STATS_PANEL_WIDTH,
-      float(WINDOW_HEIGHT),
-      {{"Time", "0 ms"}, {"Cells visited", "0"}, {"Path length", "0"}});
+  StatsPanel statsPanel(FONT_PATH, float(WINDOW_WIDTH) - STATS_PANEL_WIDTH,
+                        STATS_PANEL_WIDTH, float(WINDOW_HEIGHT),
+                        {{"Time", "0 ms"},
+                         {"Cells visited", "0"},
+                         {"Path length", "0"},
+                         {"Path efficiency", "0.0%"},
+                         {"Max frontier size", "0"}});
 
   while (window.isOpen()) {
     while (const auto event = window.pollEvent()) {
@@ -68,7 +77,11 @@ int main() {
     statsPanel.setStats(
         {{"Time", formatMs(simulator.getPathFindingElapsedMs())},
          {"Cells visited", std::to_string(simulator.getCellsVisited())},
-         {"Path length", std::to_string(simulator.getPathLength())}});
+         {"Path length", std::to_string(simulator.getPathLength())},
+         {"Path efficiency",
+          formatPercent(simulator.getPathEfficiencyPercent())},
+         {"Max frontier size",
+          std::to_string(simulator.getMaxFrontierSize())}});
 
     window.clear(sf::Color(240, 240, 240));
     simulator.runSimulation();

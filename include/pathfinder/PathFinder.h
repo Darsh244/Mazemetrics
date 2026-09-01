@@ -25,8 +25,11 @@ protected:
   int getRows() const;
   int getColumns() const;
 
+  void recordFrontierSize(int currentSize);
+
 private:
   int pathLength = 0;
+  int maxFrontierSize = 0;
 
 public:
   PathFinder(Grid &g);
@@ -43,6 +46,10 @@ public:
   // Stats
   int getCellsVisited() const { return static_cast<int>(cameFrom.size()); }
   int getPathLength() const { return pathLength; }
+  int getMaxFrontierSize() const { return maxFrontierSize; }
+
+  // Fraction of visited cells that ended up on the final path, as a
+  double getPathEfficiencyPercent() const;
 
   void setStartEnd(Position blockPos);
   void removeStartEnd(Position blockPos);

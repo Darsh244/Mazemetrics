@@ -26,6 +26,7 @@ void DFS::findPathStep(int batchSize) {
           addToStack(block);
         }
       }
+      recordFrontierSize(static_cast<int>(stack.size()));
     }
   }
 }

@@ -54,3 +54,15 @@ void PathFinder::transferStartEnd(const PathFinder &other) {
   start = other.start;
   end = other.end;
 }
+
+void PathFinder::recordFrontierSize(int currentSize) {
+  if (currentSize > maxFrontierSize)
+    maxFrontierSize = currentSize;
+}
+
+double PathFinder::getPathEfficiencyPercent() const {
+  if (!pathFound || cameFrom.empty())
+    return 0.0;
+  return 100.0 * static_cast<double>(pathLength) /
+         static_cast<double>(cameFrom.size());
+}
