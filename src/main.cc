@@ -53,7 +53,16 @@ int main() {
                                   [&simulator](const std::string &name) {
                                     simulator.setPathFindingAlgorithm(name);
                                   },
-                                  simulator.getCurrentPathFindingAlgorithm()}});
+                                  simulator.getCurrentPathFindingAlgorithm()},
+                   SidebarSection{"Actions",
+                                  {"Reset path", "Reset maze"},
+                                  [&simulator](const std::string &name) {
+                                    if (name == "Reset path")
+                                      simulator.resetPath();
+                                    else if (name == "Reset maze")
+                                      simulator.resetMaze();
+                                  },
+                                  ""}});
 
   StatsPanel statsPanel(FONT_PATH, float(WINDOW_WIDTH) - STATS_PANEL_WIDTH,
                         STATS_PANEL_WIDTH, float(WINDOW_HEIGHT),

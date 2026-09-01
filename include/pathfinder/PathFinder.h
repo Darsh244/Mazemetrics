@@ -48,7 +48,7 @@ public:
   int getPathLength() const { return pathLength; }
   int getMaxFrontierSize() const { return maxFrontierSize; }
 
-  // Fraction of visited cells that ended up on the final path, as a
+  // Fraction of visited cells that ended up on the final path
   double getPathEfficiencyPercent() const;
 
   void setStartEnd(Position blockPos);
@@ -56,6 +56,9 @@ public:
 
   // Carries over start/end positions from another pathfinder instance
   void transferStartEnd(const PathFinder &other);
+
+  // Repaints every EXPLORED/ACTIVE/PATH cell back to a walkable cell
+  void clearSearchVisuals();
 
   virtual ~PathFinder() {}
 };

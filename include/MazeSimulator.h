@@ -64,6 +64,12 @@ public:
   void setPathFindingSpeed(int i) { pathFindingSpeed = i; }
   void setPathReconstructionSpeed(int i) { pathReconstructionSpeed = i; }
 
+  // Wipes everything and regenerates a brand new maze
+  void resetMaze();
+
+  // Clears only the pathfinding result
+  void resetPath();
+
   // Stats for the sidebar readout
   int getCellsVisited() const {
     return pathFinder ? pathFinder->getCellsVisited() : 0;
@@ -80,6 +86,5 @@ public:
   float getPathFindingElapsedMs() const { return pathFindingElapsedMs; }
 
 private:
-  void reset();
   void initAlgorithmMaps();
 };

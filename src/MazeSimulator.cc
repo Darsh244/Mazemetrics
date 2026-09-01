@@ -54,7 +54,7 @@ void MazeSimulator::handleEvents(const sf::Event &event) {
       requestedWindowClose = true;
       break;
     case sf::Keyboard::Scancode::R:
-      reset();
+      resetMaze();
       break;
 
     case sf::Keyboard::Scancode::Space:
@@ -93,13 +93,27 @@ void MazeSimulator::handleEvents(const sf::Event &event) {
   }
 }
 
-void MazeSimulator::reset() {
+void MazeSimulator::resetMaze() {
   grid.reset(window_size);
   mazeGeneratorMap[currentMazeGeneratorAlgorithm]();
   pathFinderMap[currentPathFinderAlgorithm]();
   pathFindingElapsedMs = 0.f;
   state = STATE::Start;
   requestedWindowClose = false;
+}
+
+void MazeSimulator::resetPath() {
+  if (state == STATE::Start || state == STATE::GeneratingMaze)
+    return;
+
+  pathFinder->clearSearchVisuals();
+
+  std::unique_ptr<PathFinder> previous = std::move(pathFinder);
+  pathFinderMap[currentPathFinderAlgorithm]();
+  pathFinder->transferStartEnd(*previous); // keep the user's chosen start/end
+
+  pathFindingElapsedMs = 0.f;
+  state = STATE::MazeGenerated;
 }
 
 void MazeSimulator::runSimulation() {

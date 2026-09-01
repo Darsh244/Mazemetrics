@@ -55,6 +55,19 @@ void PathFinder::transferStartEnd(const PathFinder &other) {
   end = other.end;
 }
 
+void PathFinder::clearSearchVisuals() {
+  for (int r = 0; r < getRows(); ++r) {
+    for (int c = 0; c < getColumns(); ++c) {
+      Position pos{r, c};
+      Type type = getBlockType(pos);
+      if (type == Type::EXPLORED || type == Type::ACTIVE ||
+          type == Type::PATH) {
+        setBlockType(pos, Type::VISITED);
+      }
+    }
+  }
+}
+
 void PathFinder::recordFrontierSize(int currentSize) {
   if (currentSize > maxFrontierSize)
     maxFrontierSize = currentSize;
