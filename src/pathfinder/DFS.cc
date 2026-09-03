@@ -40,6 +40,9 @@ void DFS::reconstructPathStep(int batchSize) {
       currentPath = nextPathPos;
     }
   }
+  if (currentPath == start.value()) {
+    pathReconstructed = true;
+  }
 }
 
 std::vector<Position> DFS::exploreNeighbours(Position blockPos) {

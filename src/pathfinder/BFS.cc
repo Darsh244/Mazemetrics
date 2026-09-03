@@ -41,6 +41,9 @@ void BFS::reconstructPathStep(int batchSize) {
       currentPath = nextPathPos;
     }
   }
+  if (currentPath == start.value()) {
+    pathReconstructed = true;
+  }
 }
 
 std::vector<Position> BFS::getNonExploredNeighbours(Position blockPos) {
