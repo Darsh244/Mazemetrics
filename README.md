@@ -2,6 +2,8 @@
 
 A C++ maze generation and pathfinding visualizer built with SFML. It generates a maze, lets you pick start and end points, then runs a pathfinding algorithm step by step so you can watch it explore the grid and compare it against other algorithms on the exact same maze.
 
+![Mazemetrics demo](asset/docs/Mazemetrics_Demo.gif)
+
 ## What it does
 
 - Generates a maze using randomized Prim's algorithm.
