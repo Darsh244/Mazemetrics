@@ -48,10 +48,10 @@ Because the algorithms never touch pixels and the UI never touches algorithm int
 
 This project uses CMake and depends on SFML 3.
 
-\`\`\`bash
+```bash
 cmake -S . -B build
 cmake --build build
-\`\`\`
+```
 
 The executable is placed at `build/bin/maze`.
 
@@ -59,9 +59,9 @@ A font file is required for the UI text to render. There's already a default fon
 
 ## Running
 
-\`\`\`bash
+```bash
 ./build/bin/maze
-\`\`\`
+```
 
 ## TODO
 
